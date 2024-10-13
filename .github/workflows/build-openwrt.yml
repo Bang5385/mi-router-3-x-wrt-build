@@ -101,7 +101,7 @@ jobs:
       run: df -hT
 
     - name: Upload bin directory
-      uses: actions/upload-artifact@v4  # Updated to v3
+      uses: actions/upload-artifact@v4.4.3
       if: env.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -117,7 +117,7 @@ jobs:
         echo "status=success" >> $GITHUB_ENV
     
     - name: Upload firmware directory
-      uses: actions/upload-artifact@v3  # Updated to v3
+      uses: actions/upload-artifact@v4.4.3
       if: env.status == 'success' && !cancelled()
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -134,7 +134,7 @@ jobs:
         echo "status=success" >> $GITHUB_ENV
     
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v2
+      uses: phuonghuynh/action-ghrelease@v1.1.0
       if: env.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -143,15 +143,14 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete workflow runs
-      # Unable to find v0.4.0, so switching to latest available stable version (e.g. main or v0.3.0)
-      uses: GitRML/delete-workflow-runs@main  
+    - name: Delete workflow run
+      uses: christosgalano/delete-workflow-runs@v1.0.0
       with:
         retain_days: 1
         keep_minimum_runs: 3
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.3.4
+      uses: dev-drprasad/delete-older-releases@v0.3.3
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 3
