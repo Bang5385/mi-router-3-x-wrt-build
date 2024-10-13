@@ -135,7 +135,7 @@ jobs:
         echo "status=success" >> $GITHUB_ENV
     
     - name: Upload firmware to release
-      uses: phuonghuynh/action-ghrelease@v1.1.0
+      uses: softprops/action-gh-release@v2
       if: env.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
